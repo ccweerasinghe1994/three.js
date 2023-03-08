@@ -37,83 +37,23 @@ window.addEventListener('dblclick', () => {
 
 // scene
 const scene = new THREE.Scene();
-
-const vertices = [
-    // front
-    {pos: [-1, -1, 1], norm: [0, 0, 1], uv: [0, 0],},
-    {pos: [1, -1, 1], norm: [0, 0, 1], uv: [1, 0],},
-    {pos: [-1, 1, 1], norm: [0, 0, 1], uv: [0, 1],},
-
-    {pos: [-1, 1, 1], norm: [0, 0, 1], uv: [0, 1],},
-    {pos: [1, -1, 1], norm: [0, 0, 1], uv: [1, 0],},
-    {pos: [1, 1, 1], norm: [0, 0, 1], uv: [1, 1],},
-    // right
-    {pos: [1, -1, 1], norm: [1, 0, 0], uv: [0, 0],},
-    {pos: [1, -1, -1], norm: [1, 0, 0], uv: [1, 0],},
-    {pos: [1, 1, 1], norm: [1, 0, 0], uv: [0, 1],},
-
-    {pos: [1, 1, 1], norm: [1, 0, 0], uv: [0, 1],},
-    {pos: [1, -1, -1], norm: [1, 0, 0], uv: [1, 0],},
-    {pos: [1, 1, -1], norm: [1, 0, 0], uv: [1, 1],},
-    // back
-    {pos: [1, -1, -1], norm: [0, 0, -1], uv: [0, 0],},
-    {pos: [-1, -1, -1], norm: [0, 0, -1], uv: [1, 0],},
-    {pos: [1, 1, -1], norm: [0, 0, -1], uv: [0, 1],},
-
-    {pos: [1, 1, -1], norm: [0, 0, -1], uv: [0, 1],},
-    {pos: [-1, -1, -1], norm: [0, 0, -1], uv: [1, 0],},
-    {pos: [-1, 1, -1], norm: [0, 0, -1], uv: [1, 1],},
-    // left
-    {pos: [-1, -1, -1], norm: [-1, 0, 0], uv: [0, 0],},
-    {pos: [-1, -1, 1], norm: [-1, 0, 0], uv: [1, 0],},
-    {pos: [-1, 1, -1], norm: [-1, 0, 0], uv: [0, 1],},
-
-    {pos: [-1, 1, -1], norm: [-1, 0, 0], uv: [0, 1],},
-    {pos: [-1, -1, 1], norm: [-1, 0, 0], uv: [1, 0],},
-    {pos: [-1, 1, 1], norm: [-1, 0, 0], uv: [1, 1],},
-    // top
-    {pos: [1, 1, -1], norm: [0, 1, 0], uv: [0, 0],},
-    {pos: [-1, 1, -1], norm: [0, 1, 0], uv: [1, 0],},
-    {pos: [1, 1, 1], norm: [0, 1, 0], uv: [0, 1],},
-
-    {pos: [1, 1, 1], norm: [0, 1, 0], uv: [0, 1],},
-    {pos: [-1, 1, -1], norm: [0, 1, 0], uv: [1, 0],},
-    {pos: [-1, 1, 1], norm: [0, 1, 0], uv: [1, 1],},
-    // bottom
-    {pos: [1, -1, 1], norm: [0, -1, 0], uv: [0, 0],},
-    {pos: [-1, -1, 1], norm: [0, -1, 0], uv: [1, 0],},
-    {pos: [1, -1, -1], norm: [0, -1, 0], uv: [0, 1],},
-
-    {pos: [1, -1, -1], norm: [0, -1, 0], uv: [0, 1],},
-    {pos: [-1, -1, 1], norm: [0, -1, 0], uv: [1, 0],},
-    {pos: [-1, -1, -1], norm: [0, -1, 0], uv: [1, 1],},
-];
-const positions = [];
-const normals = [];
-const uvs = [];
-for (const vertex of vertices) {
-    positions.push(...vertex.pos);
-    normals.push(...vertex.norm);
-    uvs.push(...vertex.uv);
-}
-// const geometry = new THREE.BoxGeometry(1, 1, 1, 1, 1, 3);
 const geometry = new THREE.BufferGeometry();
 
-const positionNumComponents = 3;
-const normalNumComponents = 3;
-const uvNumComponents = 2;
-geometry.setAttribute(
-    'position',
-    new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
-geometry.setAttribute(
-    'normal',
-    new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
-geometry.setAttribute(
-    'uv',
-    new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
+const count = 50000;
+const positionsArray = new Float32Array(count * 3 * 3);
 
+for (let i = 0; i < positionsArray.length; i++) {
+    positionsArray[i] = (Math.random() - 0.5) * 5
+}
+
+const positionBufferAttribute = new THREE.BufferAttribute(positionsArray, 3);
+
+
+// const geometry = new THREE.BoxGeometry(1, 1, 1, 1, 1, 3);
+
+geometry.setAttribute('position', positionBufferAttribute)
 const material = new THREE.MeshBasicMaterial({
-    wireframe: true, color: '#dcd6d6',
+    wireframe: true, color: '#c9ab14',
 
 });
 
@@ -135,9 +75,7 @@ const sizes = {
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
 // const camera = new THREE.OrthographicCamera(-1 * sizes.getAspectRatio(), 1 * sizes.getAspectRatio(), 1, -1, 0.1, 100);
 
-camera.position.z = 1;
-// camera.position.y = 2;
-// camera.position.x = 2;
+camera.position.z = 9;
 
 
 scene.add(camera);
@@ -146,8 +84,6 @@ scene.add(camera);
 const canvas = document.querySelector(".webgl")!;
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true
-// controls.target.y = 1;
-// controls.update()
 
 
 const render = new THREE.WebGLRenderer({
